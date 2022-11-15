@@ -3,22 +3,28 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data;
 using PlatformService.Dtos;
 using PlatformService.Models;
+using PlatformService.SyncDataServices.Http;
 
 namespace PlatformService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PlatformsController : ControllerBase 
+    public class PlatformsController : ControllerBase
     {
         private readonly IPlatformRepo _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<PlatformsController> _logger;
+        private readonly ICommandDataClient _commandDataClient;
 
-        public PlatformsController(IPlatformRepo repository, IMapper mapper, ILogger<PlatformsController> logger)
+        public PlatformsController(IPlatformRepo repository,
+                                   IMapper mapper,
+                                   ILogger<PlatformsController> logger,
+                                   ICommandDataClient commandDataClient)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            _commandDataClient = commandDataClient;
         }
 
         [HttpGet]
@@ -44,16 +50,24 @@ namespace PlatformService.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PlatformReadDto> CreatePlatform([FromBody] PlatformCreateDto platformCreateDto)
+        public async Task<ActionResult<PlatformReadDto>> CreatePlatformAsync([FromBody] PlatformCreateDto platformCreateDto)
         {
             _logger.LogInformation("Creating platform");
             var platformModel = _mapper.Map<Platform>(platformCreateDto);
-            
+
             _repository.CreatePlatform(platformModel);
             _repository.SaveChanges();
-            
+
             var platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
+            try
+            {
+                await _commandDataClient.SendPlatformToCommand(platformReadDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"--> Could not send synchronously: {ex.Message}");
+            }
             return CreatedAtRoute(nameof(GetPlatformById), new { Id = platformReadDto.Id }, platformReadDto);
         }
-    }    
+    }
 }
