@@ -25,7 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build Platform Service the Docker image
-      run: docker build ./PlatformService/Dockerfile --file Dockerfile --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:$TAG --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:latest
+      run: docker build ./PlatformService/Dockerfile --file Dockerfile --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:$(date +%s) --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:latest
     - name: Publish to Docker Hub
       run: docker push --all-tags ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME
   build_push_command:
@@ -38,6 +38,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build Platform Service the Docker image
-      run: docker build ./PlatformService/Dockerfile --file Dockerfile --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:$TAG --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:latest
+      run: docker build ./CommandsService/Dockerfile --file Dockerfile --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:$(date +%s) --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:latest
     - name: Publish to Docker Hub
       run: docker push --all-tags ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME
