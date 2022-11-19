@@ -27,4 +27,23 @@ jobs:
           context: ./PlatformService
           push: true
           tags: ${{ secrets.DOCKER_HUB_REPO }}/platform_service:latest
-          
+  command:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to docker hub 
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_REPO }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./CommandService
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_REPO }}/command_service:latest
