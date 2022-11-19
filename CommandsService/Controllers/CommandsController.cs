@@ -71,7 +71,9 @@ namespace CommandsService.Controllers
                 return BadRequest();
             }
 
-            return CreatedAtRoute(nameof(GetCommandForPlatform), new { platformId = platformId, commandId = commandModel.Id }, _mapper.Map<CommandReadDto>(commandModel));
+            return CreatedAtRoute(nameof(GetCommandForPlatform),
+                                  new { platformId = platformId, commandId = commandModel.Id },
+                                  _mapper.Map<CommandReadDto>(commandModel));
         }
     }
 }
