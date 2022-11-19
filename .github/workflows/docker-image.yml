@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  login:
+  platform:
     runs-on: ubuntu-latest
     steps:
       - name: Login to docker hub 
@@ -15,29 +15,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_REPO }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-  build_push_platform:
-    name: Build and Push Platform Service to Docker Hub
-    needs: login
-    runs-on: ubuntu-latest
-    env:
-      TAG: $(date +%s)
-      IMAGE_NAME: platform_service
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build Platform Service the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:$(date +%s) --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:latest
-    - name: Publish to Docker Hub
-      run: docker push --all-tags ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME
-  build_push_command:
-    name: Build and Push Command Service to Docker Hub
-    needs: login
-    runs-on: ubuntu-latest
-    env:
-      TAG: $(date +%s)
-      IMAGE_NAME: command_service
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build Platform Service the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:$(date +%s) --tag ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME:latest
-    - name: Publish to Docker Hub
-      run: docker push --all-tags ${{ secrets.DOCKER_HUB_REPO }}/$IMAGE_NAME
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_REPO }}/platform_service:latest
+          # build-args: |
+          #   RABBITMQ_VERSION=3.11.3-management
