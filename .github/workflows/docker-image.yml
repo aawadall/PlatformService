@@ -44,6 +44,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./CommandService
+          context: ./CommandsService
           push: true
           tags: ${{ secrets.DOCKER_HUB_REPO }}/command_service:latest
