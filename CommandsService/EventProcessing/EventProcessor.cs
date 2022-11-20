@@ -26,7 +26,7 @@ namespace CommandsService.EventProcessing
             switch (eventType)
             {
                 case EventType.PlatformPublished:
-                    // TODO
+                    addPlatform(message);
                     break;
                 default:
                     _logger.LogInformation($"Unrecognized event type: {eventType}");
@@ -65,6 +65,7 @@ namespace CommandsService.EventProcessing
                     {
                         repo.CreatePlatform(platform);
                         repo.SaveChanges();
+                        _logger.LogInformation($"--> Platform {platform.Name} added");
                     }
                     else 
                     {
