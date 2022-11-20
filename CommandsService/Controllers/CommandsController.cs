@@ -31,6 +31,9 @@ namespace CommandsService.Controllers
             }
 
             var commands = _repo.GetCommandsForPlatform(platformId);
+
+            _logger.LogInformation($"--> GetCommandsForPlatform: {platformId} - {commands.Count()} commands found");
+            
             return Ok(_mapper.Map<CommandReadDto>(commands));
         }
 
