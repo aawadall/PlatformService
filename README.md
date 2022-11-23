@@ -4,7 +4,7 @@ Follow along with [Les Jackson's Course](https://www.youtube.com/watch?v=DgVjEo3
 ## Getting Started
 1. Clone the repo
 2. Build images:
-    - `docker build -t <your_docker_user>/platform_service ./PlatformService 
+    - `docker build -t <your_docker_user>/platform_service ./PlatformService` 
     - `docker build -t <your_docker_user>/command_service ./CommandService`
 3. Push images to Docker Hub:
     - `docker push <your_docker_user>/platform_service`
@@ -21,3 +21,4 @@ Follow along with [Les Jackson's Course](https://www.youtube.com/watch?v=DgVjEo3
 
 **Note:** MS SQL Password is stored in `appsettings.Production.json` and `appsettings.Development.json` files. These files are not included in the repo. You will need to create them and add the password to them.
 
+**Note:** images are automatically published to [aawadall/platform_service](https://hub.docker.com/repository/docker/aawadall/platform_service) and [aawadall/command_service](https://hub.docker.com/repository/docker/aawadall/command_service)
